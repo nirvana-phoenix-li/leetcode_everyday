@@ -93,19 +93,6 @@
       <change beforePath="$PROJECT_DIR$/January2023/src/main/java/test/T7.java" beforeDir="false" afterPath="$PROJECT_DIR$/January2023/src/main/java/test/T7.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/January2023/src/main/java/test/T888.java" beforeDir="false" afterPath="$PROJECT_DIR$/January2023/src/main/java/test/T888.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/January2023/target/classes/META-INF/January2023.kotlin_module" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week336/T1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week336/T2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week336/T3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week336/T4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week342/T1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week342/T2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week342/T3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/contest/week342/T4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/entity/ListNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/entity/Number.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/entity/People.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/entity/Student.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/entity/TreeNode.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/January2023/target/classes/everyday/april/CountDaysTogether2409.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/January2023/target/classes/everyday/april/LastSubstring1163.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/January2023/target/classes/everyday/april/LongestStrChain1048.class" beforeDir="false" />
@@ -195,51 +182,8 @@
       <change beforePath="$PROJECT_DIR$/January2023/target/classes/everyday/may/SmallestRepunitDivByK1015.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/January2023/target/classes/everyday/october/MaxKelements2530.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/January2023/target/classes/everyday/october/T1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/feature/DeadlockExample.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/feature/Person.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/feature/Student.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/feature/T1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/CountPoints1828.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/ExpandBinaryTreeLCP67.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/GarbageCollection2391.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/GroupThePeople1282.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/MaxProfit121.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/MaxProfit122.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/MergeNodes2181.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/MinMovesToSeat2037.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/MinOperations1769.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/MostWordsFound2114.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/question/OnesMinusZeros2482.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/reflect/BullPerson.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/reflect/Person.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/reflect/RedPerson.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/reflect/ReflectionExample.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/reflect/YellowPerson.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/EasyExcelTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/GiveMeAnswer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/Hello.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T3333.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T334.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T77.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T88.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T888.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T889.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T8896.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T8900.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T99888.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T999.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T9999988.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/TTT88.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/utils/BracketsCovertUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/utils/DBUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/utils/ExcelUitls.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/utils/HttpClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/utils/ParamsJson.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/utils/easyExcel/EasyExcelExportUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/yiguan/T2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/January2023/target/classes/yiguan/getCurrentMessage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T7.class" beforeDir="false" afterPath="$PROJECT_DIR$/January2023/target/classes/test/T7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/January2023/target/classes/test/T888.class" beforeDir="false" afterPath="$PROJECT_DIR$/January2023/target/classes/test/T888.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -275,6 +219,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
   <component name="RunDashboard">
@@ -289,7 +234,20 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.T7">
+  <component name="RunManager" selected="Application.CountPoints2103">
+    <configuration name="CountPoints2103" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="everyday.y2023.november.CountPoints2103" />
+      <module name="January2023" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="everyday.y2023.november.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MaxTotalFruits2106" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="everyday.y2022.may.MaxTotalFruits2106" />
       <module name="January2023" />
@@ -318,6 +276,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.CountPoints2103" />
         <item itemvalue="Application.T7" />
         <item itemvalue="Application.MaxTotalFruits2106" />
       </list>
@@ -333,7 +292,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1698913261765</updated>
-      <workItem from="1698913266826" duration="1839000" />
+      <workItem from="1698913266826" duration="2659000" />
     </task>
     <servers />
   </component>

@@ -62,14 +62,40 @@ import java.util.HashMap;
  */
 public class CountPoints2103 {
     public int countPoints(String rings) {
-        int[] ints = new int[10];
+        int[] helpArr = new int[10];
         int answer = 0;
         for (int i = 0; i < rings.length() / 2; i++) {
             char color = rings.charAt(i * 2);
-//            char color = rings.charAt(i * 2+1);
+            int index = rings.charAt(i * 2 + 1) - 48;
             //R'、'G' 或 'B' mapper 1,2,4
-//            if ()
+            int i1 = helpArr[index];
+            if (color == 'R') {
+                if (i1 % 2 == 0) {
+                    helpArr[index] = i1 + 1;
+                }
+            } else if (color == 'G') {
+                int temp = i1 / 2;
+                if (temp % 2 == 0) {
+                    helpArr[index] = i1 + 2;
+                }
+            } else if (color == 'B') {
+                int temp = i1 / 4;
+                if (temp % 2 == 0) {
+                    helpArr[index] = i1 + 4;
+                }
+            }
+        }
+        for (int i : helpArr) {
+            if (i == 7) answer++;
         }
         return answer;
+    }
+
+    public static void main(String[] args) {
+        CountPoints2103 main = new CountPoints2103();
+        String rings = "B0B6G0R6R0R6G9";
+        int i = main.countPoints(rings);
+        System.out.println(i);
+
     }
 }

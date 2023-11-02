@@ -1,6 +1,6 @@
 package test;
 
-import everyday.august.StockPrice;
+import everyday.y2022.august.StockPrice;
 
 public class T888 {
     public static void main(String[] args) {

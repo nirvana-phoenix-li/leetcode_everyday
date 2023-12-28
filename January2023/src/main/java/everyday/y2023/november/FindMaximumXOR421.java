@@ -1,7 +1,12 @@
 package everyday.y2023.november;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 421. 数组中两个数的最大异或值
+ * 尝试过
  * 中等
  * 相关标签
  * 相关企业
@@ -25,11 +30,17 @@ package everyday.y2023.november;
  * 1 <= nums.length <= 2 * 105
  * 0 <= nums[i] <= 231 - 1
  * 通过次数
- * 47.5K
+ * 54.2K
  * 提交次数
- * 78.2K
+ * 90.4K
  * 通过率
- * 60.7%
+ * 60.0%
+ * 请问您在哪类招聘中遇到此题？
+ * 1/5
+ * 社招
+ * 校招
+ * 实习
+ * 未遇到
  */
 public class FindMaximumXOR421 {
     public static void main(String[] args) {
@@ -37,18 +48,29 @@ public class FindMaximumXOR421 {
     }
 
     public int findMaximumXOR(int[] nums) {
-        if (nums.length<=1){
-            return 0;
+        HashMap<Integer, Set<Integer>> hashMap = new HashMap<>();
+        for (int i = 0; i < 31; i++) {
+            hashMap.put(i, new HashSet<Integer>());
         }
-        int maxVal = Integer.MIN_VALUE;
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                int i1 = nums[i] ^ nums[j];
-                if (i1 > maxVal) {
-                    maxVal = i1;
+        for (int num : nums) {
+            int help = 0;
+            int temp = num;
+            while (temp != 0) {
+                int i = temp % 2;
+                if (i == 1) {
+                    hashMap.get(help).add(num);
                 }
+                help++;
+                temp /= 2;
             }
         }
-        return maxVal;
+
+        for (int z = 30; z >= 0; z--) {
+            if (hashMap.get(z).size() != 0) {
+
+            }
+        }
+        return 0;
+
     }
 }

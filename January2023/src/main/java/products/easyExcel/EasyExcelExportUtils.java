@@ -1,4 +1,4 @@
-package utils.easyExcel;
+package products.easyExcel;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;

@@ -74,13 +74,14 @@ public class ExcelUitls {
     }
 
     private static void excelWrite() throws IOException, WriteException {
-        File outputFile = new File("测试环境一万个测试用户token.xls");
+        long first = System.currentTimeMillis();
+        File outputFile = new File("测试环境一万个测试用户111token.xls");
         // 创建一个工作簿
         WritableWorkbook outputbook = Workbook.createWorkbook(outputFile);
 
         // 创建一个工作表
         WritableSheet outputSheet = outputbook.createSheet("sheet1", 0);
-        for (int row = 1; row <= 100; row++)
+        for (int row = 1; row <= 3000; row++)
         {
 
             for (int col = 0; col < 2; col++)
@@ -91,6 +92,7 @@ public class ExcelUitls {
         }
         outputbook.write();
         outputbook.close();
+        System.out.println(System.currentTimeMillis() - first);
     }
 
     private static void excelRead(String fileName) throws Exception {

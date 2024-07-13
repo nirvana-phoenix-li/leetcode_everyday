@@ -13,6 +13,7 @@ public class T1 {
 
         HashSet<Integer> integers = new HashSet<Integer>();
         integers.add(1);
+        System.out.println("hsufihsoi");
 
 
     }

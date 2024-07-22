@@ -75,7 +75,8 @@ public class ExcelUitls {
 
     private static void excelWrite() throws IOException, WriteException {
         long first = System.currentTimeMillis();
-        File outputFile = new File("测试环境一万个测试用户111token.xls");
+        File outputFile = File.createTempFile("appealExport", ".xlsx");
+//        File outputFile = new File("测试.xls");
         // 创建一个工作簿
         WritableWorkbook outputbook = Workbook.createWorkbook(outputFile);
 

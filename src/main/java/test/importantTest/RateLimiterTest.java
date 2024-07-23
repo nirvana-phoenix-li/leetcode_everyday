@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 public class RateLimiterTest {
 
     public static void main(String[] args) throws InterruptedException {
-        RateLimiter rateLimiter = RateLimiterUtil.rateLimiter;
-        Thread.sleep(1000);
+//        RateLimiter rateLimiter = RateLimiterUtil.rateLimiter;
+        RateLimiter rateLimiter = RateLimiter.create(100d);
 
         // 创建一个每秒允许150个许可的RateLimiter
         long currentTimeMillis = System.currentTimeMillis();
@@ -17,9 +17,7 @@ public class RateLimiterTest {
         for (int i = 0; i < 1000; i++) {
             // 从限流器中获取一个许可
             boolean b = rateLimiter.tryAcquire(20, TimeUnit.MILLISECONDS);
-            System.out.println(b);
-
-            rateLimiter.acquire();
+//            System.out.println(b);
 
             // 执行某些操作
             doSomething(i);

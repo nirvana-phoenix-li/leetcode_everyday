@@ -13,10 +13,10 @@ public class TestFuture {
 
         // 创建一个任务列表
         List<CompletableFuture<String>> taskList = new ArrayList<>();
-
-        taskList.add(CompletableFuture.supplyAsync(() -> performTask("1")));
-        taskList.add(CompletableFuture.supplyAsync(() -> performTask("2")));
-        taskList.add(CompletableFuture.supplyAsync(() -> performTask("3")));
+        for (int i = 0; i < 20; i++) {
+            int finalI = i;
+            taskList.add(CompletableFuture.supplyAsync(() -> performTask(String.valueOf(finalI))));
+        }
 
         CompletableFuture<Void> allOf = CompletableFuture.allOf(taskList.toArray(new CompletableFuture[0]));
 
@@ -46,9 +46,6 @@ public class TestFuture {
     }
 
     private static String performTask(String task) {
-        if (task.equals("1")) {
-            throw new RuntimeException();
-        }
         System.out.println("coming task");
         try {
             Thread.sleep(2000);

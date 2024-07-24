@@ -27,9 +27,9 @@ public class TestNewThreadName {
         thread2.start();
         System.out.println();
 
-
     }
-    private static void test(){
+
+    private static void test() {
         System.out.println("Innnnnnnner");
     }
 }

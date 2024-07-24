@@ -100,7 +100,9 @@ public class MaximumDetonation2101 {
             }
         }
 
+
         for (Integer i : hashMap.keySet()) {
+
 
         }
         return 0;

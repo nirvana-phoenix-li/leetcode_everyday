@@ -1,5 +1,8 @@
 package everyday.y2024.july;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -59,10 +62,22 @@ import java.util.List;
  */
 public class RelocateMarbles2766 {
     public static void main(String[] args) {
+        RelocateMarbles2766 main = new RelocateMarbles2766();
 
     }
 
     public List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
-        return null;
+
+        HashSet<Integer> hashSet = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            hashSet.add(nums[i]);
+        }
+        for (int i = 0; i < moveFrom.length; i++) {
+            hashSet.remove(moveFrom[i]);
+            hashSet.add(moveTo[i]);
+        }
+        ArrayList<Integer> list = new ArrayList<>(hashSet);
+        Collections.sort(list);
+        return list;
     }
 }

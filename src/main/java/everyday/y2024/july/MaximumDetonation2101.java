@@ -3,6 +3,7 @@ package everyday.y2024.july;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 2101. 引爆最多的炸弹
@@ -100,7 +101,7 @@ public class MaximumDetonation2101 {
             }
         }
 
-
+        HashMap<Integer, Set<Integer>> flowMap = new HashMap<>();
         for (Integer i : hashMap.keySet()) {
 
 

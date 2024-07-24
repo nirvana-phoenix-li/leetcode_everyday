@@ -3,7 +3,7 @@ package utils;
 public class BracketsCovertUtils {
 
     public static void main(String[] args) {
-        String input="[[-17,-6],[-4,0],[-2,-16],[-1,2],[0,11],[6,18]]";
+        String input="[[1,2,3],[2,3,1],[3,4,2],[4,5,3],[5,6,4]]";
 
         String covert = covert(input);
         System.out.println(covert);

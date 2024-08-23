@@ -61,53 +61,10 @@ import java.util.LinkedList;
 public class MinEnd3133 {
     public static void main(String[] args) {
         MinEnd3133 main = new MinEnd3133();
-        long l = main.minEnd(3, 4);
+        long l = main.minEnd(6715154, 7193485);
         System.out.println(l);
 
     }
-
-    public long minEnd2(int n, int x) {
-        long original = x;
-        ArrayList<Integer> zeroIndex = new ArrayList<>();
-        int count = 0;
-        while (x > 0) {
-            int temp = x % 2;
-            if (temp == 0) {
-                zeroIndex.add(count);
-            }
-            x /= 2;
-            count++;
-        }
-
-
-        int size = zeroIndex.size();
-        if (n <= 1 << size) {
-            Deque<Integer> innerIndex = new LinkedList<>();
-            int current = 0;
-            n--;
-            while (n > 0) {
-                int temp = n % 2;
-                if (temp == 1) {
-                    innerIndex.add(current++);
-                }
-                n /= 2;
-            }
-
-            while (innerIndex.size() > 0) {
-                Integer pollIndex = innerIndex.poll();
-                original += 1 << zeroIndex.get(size - pollIndex - 1);
-            }
-        } else {
-            original = (1 << count) - 1;
-            int surplus = n - (1 << size);
-            original += surplus * (1 << count);
-//            while (surplus-- > 0) {
-//                original += 1 << count++;
-//            }
-        }
-        return original;
-    }
-
 
     public long minEnd(int n, int x) {
         long original = x;
@@ -122,35 +79,27 @@ public class MinEnd3133 {
             count++;
         }
 
-
         int size = zeroIndex.size();
-
         int prifix = (1 << size);
         n--;
         int first = n % prifix;
-        int second = n / prifix;
+        long second = n / prifix;
 
         Deque<Integer> innerIndex = new LinkedList<>();
         int current = 0;
-//        first--;
+
         while (first > 0) {
             int temp = first % 2;
             if (temp == 1) {
-                innerIndex.add(current++);
+                innerIndex.add(current);
             }
+            current++;
             first /= 2;
         }
 
         while (innerIndex.size() > 0) {
             Integer pollIndex = innerIndex.poll();
-
-            original += 1 << (zeroIndex.get(size - pollIndex - 1) - 1);
-//            if (pollIndex == 0) {
-//                original++;
-//            }else {
-//                original += 1 << zeroIndex.get(size - pollIndex - 1);
-//
-//            }
+            original += 1 << zeroIndex.get(pollIndex);
         }
 
         original += second * (1 << count);

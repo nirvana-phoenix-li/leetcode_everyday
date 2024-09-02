@@ -1,23 +1,17 @@
 package test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class T11 {
     public static void main(String[] args) {
-
-        List<String> list = new ArrayList<>();
-        injectList(list);
-        for (String s : list) {
-            System.out.println(s);
-        }
-
-    }
-
-    private static void injectList(List<String> list) {
-        list.add("a");
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("flink");
+        arrayList.add("dfa");
+        arrayList.add("neo4j");
+        int i = new Random().nextInt(arrayList.size());
+        System.out.println(arrayList.get(i));
 
     }
+
+
 }

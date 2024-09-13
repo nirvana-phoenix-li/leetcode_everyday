@@ -53,16 +53,27 @@ import java.util.Arrays;
  * 46.7%
  */
 public class MaxNumOfMarkedIndices2576 {
+
+    public static void main(String[] args) {
+        MaxNumOfMarkedIndices2576 main = new MaxNumOfMarkedIndices2576();
+        int[] ints = {3,5,2,4};
+        int i = main.maxNumOfMarkedIndices(ints);
+        System.out.println(i);
+    }
     public int maxNumOfMarkedIndices(int[] nums) {
         Arrays.sort(nums);
         int left = 0, right = (nums.length + 1) / 2;
         int count = 0;
         while (left <= nums.length / 2 && right <= nums.length - 1) {
-            if (nums[left] <= 2 * nums[right]) {
-                count++;
+            if (2 * nums[left] <= nums[right]) {
+                count+=2;
                 left++;
                 right++;
+            }else {
+                right++;
             }
+
         }
+        return count;
     }
 }

@@ -11,6 +11,7 @@ public class T88 {
         String  config="[13989359318035249761,108979364828092077,876912568652975635,935592772117828860]";
         List<String> longs = JSON.parseArray(config, String.class);
         System.out.println(longs.size());
+        System.out.println("first change");
 
         long l = 334210518799641963l;
         System.out.println(l);

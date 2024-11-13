@@ -22,7 +22,7 @@ import java.util.HashSet;
 public class ExcelUitls {
     public static void main(String[] args) throws Exception {
 //        readAndWrite();
-        excelWrite();
+//        excelWrite();
     }
 
     private static void readAndWrite() throws IOException, BiffException, WriteException {
@@ -73,10 +73,10 @@ public class ExcelUitls {
         workbook.close();
     }
 
-    private static void excelWrite() throws IOException, WriteException {
+    private static void excelWrite(String excelName) throws IOException, WriteException {
         long first = System.currentTimeMillis();
-        File outputFile = File.createTempFile("appealExport", ".xlsx");
-//        File outputFile = new File("测试.xls");
+//        File outputFile = File.createTempFile(excelName, ".xlsx");
+        File outputFile = new File(excelName+".xlsx");
         // 创建一个工作簿
         WritableWorkbook outputbook = Workbook.createWorkbook(outputFile);
 

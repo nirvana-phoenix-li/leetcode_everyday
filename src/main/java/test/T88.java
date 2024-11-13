@@ -12,6 +12,7 @@ public class T88 {
         List<String> longs = JSON.parseArray(config, String.class);
         System.out.println(longs.size());
         System.out.println("first change");
+        System.out.println("second change");
 
         long l = 334210518799641963l;
         System.out.println(l);

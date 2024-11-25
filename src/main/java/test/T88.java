@@ -1,9 +1,15 @@
 package test;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class T88 {
     public static void main(String[] args) {
@@ -12,7 +18,12 @@ public class T88 {
         List<String> longs = JSON.parseArray(config, String.class);
         System.out.println(longs.size());
         System.out.println("first change");
-        System.out.println("second change");
+        BigDecimal bigDecimal = new BigDecimal("2.0");
+        BigDecimal second = new BigDecimal("2.0");
+        BigDecimal add = bigDecimal.add(second);
+        if (add.intValue()>=4) {
+            System.out.println("jjj");
+        }
 
         long l = 334210518799641963l;
         System.out.println(l);

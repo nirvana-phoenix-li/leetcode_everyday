@@ -10,9 +10,10 @@ import java.util.Date;
 
 public class T4 {
     public static void main(String[] args) throws ParseException {
-        // 定义日期字符串
-        Date date = new Date();
-        long between = DateUtil.between(date, DateUtil.endOfDay(date), DateUnit.SECOND);
-        System.out.println(between);
+        String original = "{\"id\": 83,\"recordId\": 2982,\"memberId\": 215995502578101273,\"type\": \"expire_remind_more\"}";
+        String s = original.replaceAll(" ", "");
+        System.out.println(s);
+
+
     }
 }

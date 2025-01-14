@@ -7,6 +7,9 @@ public class T999 {
         System.out.println(replace);
         int count = count(3);
         System.out.println(count);
+
+
+        System.out.println("addition");
     }
 
     public static int count(Integer input) {

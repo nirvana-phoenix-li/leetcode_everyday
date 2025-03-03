@@ -1,18 +1,30 @@
 package test;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUnit;
-import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class T4 {
     public static void main(String[] args) throws ParseException {
-        // 定义日期字符串
-        Date date = new Date();
-        long between = DateUtil.between(date, DateUtil.endOfDay(date), DateUnit.SECOND);
-        System.out.println(between);
+
+        String text = "{\"skuDetailInfoList\":[{\"goodsCount\":1,\"exclusiveForNewcomers\":false,\"expiration\":1,\"goodsFlag\":\"normal\",\"skuCodeWithPrefix\":\"B-955124\",\"bomType\":1,\"skuCode\":\"955124\"},{\"goodsCount\":2,\"exclusiveForNewcomers\":false,\"expiration\":1,\"goodsFlag\":\"normal\",\"skuCodeWithPrefix\":\"B-CB2159451\",\"bomType\":2}]}";
+        JSONObject jsonObject = JSONObject.parseObject(text);
+        List<Object> skuDetailInfoList = (List<Object>) jsonObject.get("skuDetailInfoList");
+        TreeSet<String> skuAndCount = new TreeSet<>();
+        for (Object skuDetail : skuDetailInfoList) {
+            StringBuilder sb = new StringBuilder();
+            String skuCodeWithPrefix = String.valueOf(((Map) skuDetail).get("skuCodeWithPrefix"));
+            String goodsCount = String.valueOf(((Map) skuDetail).get("goodsCount"));
+            sb.append(skuCodeWithPrefix).append("_").append(goodsCount).append(",");
+            skuAndCount.add(sb.toString());
+        }
+
+        if (CollectionUtils.isEmpty(skuAndCount)){
+            System.out.println("0000000");
+        }
+        System.out.println(String.join("", skuAndCount));
     }
 }

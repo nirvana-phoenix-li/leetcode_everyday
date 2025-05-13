@@ -106,6 +106,12 @@
             <version>2.10.10</version>
         </dependency>
 
+        <!-- Apache HttpClient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version> <!-- 或使用最新版本 -->
+        </dependency>
 
 
     </dependencies>

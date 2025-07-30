@@ -23,10 +23,11 @@ public class AttainLog {
         String endString = "\"";
         HashMap<String, Set<String>> hashMap = new HashMap<>();
 
-        LocalDateTime originalStart = LocalDateTime.of(2025, 7, 3, 0, 0);
+        LocalDateTime originalStart = LocalDateTime.of(2025, 7, 3, 16, 2,0);
         LocalDateTime originalEnd = originalStart.plusSeconds(60);
 
-        for (int k = 0; k < 60*16; k++) {
+        int requestCount = 0;
+        for (int k = 0; k < 1; k++) {
 
             String response = callElasticSearchAPI(originalStart.toString(), originalEnd.toString());
             for (int i = 0; i < response.length(); i++) {
@@ -56,6 +57,7 @@ public class AttainLog {
                             }
                         }
                     }
+                    requestCount++;
 
                     if (hashMap.containsKey(indicator.getEsKey())) {
                         hashMap.get(indicator.getEsKey()).add(indicator.getTime());
@@ -70,6 +72,7 @@ public class AttainLog {
             }
             originalStart = originalStart.plusSeconds(60);
             originalEnd = originalEnd.plusSeconds(60);
+
         }
 
 
@@ -109,7 +112,7 @@ public class AttainLog {
      */
     public static String callElasticSearchAPI(String startTime, String endTime) throws IOException {
         // 请求URL
-        String url = "https://es-elk-kibana2.yonghuivip.com/s/cp-hcfk/internal/search/ese/FnpxYjZyenlpUkYtaS1kN1NwLS12ZVEgd3NOdEJHV2NSY3l1YkpFYUlvR1VNdzoyNTIwMjczMjY=";
+        String url = "https://es-elk-kibana2.yonghuivip.com/s/cp-hcfk/internal/search/ese";
 
         // 构建请求体JSON
         JSONObject requestBody = new JSONObject();
@@ -136,7 +139,7 @@ public class AttainLog {
         JSONObject agg2 = new JSONObject();
         JSONObject dateHistogram = new JSONObject();
         dateHistogram.put("field", "@timestamp");
-        dateHistogram.put("fixed_interval", "5s");
+        dateHistogram.put("fixed_interval", "100ms");
         dateHistogram.put("time_zone", "Asia/Shanghai");
         dateHistogram.put("min_doc_count", 1);
         agg2.put("date_histogram", dateHistogram);
@@ -163,7 +166,7 @@ public class AttainLog {
 
         JSONObject multiMatch = new JSONObject();
         multiMatch.put("type", "phrase");
-        multiMatch.put("query", "风控特征计算服务queryFeatureEsOriginalResult");
+        multiMatch.put("query", "风控特征计算服务");
         multiMatch.put("lenient", true);
 
         JSONObject rangeQuery = new JSONObject();
@@ -207,28 +210,31 @@ public class AttainLog {
         // 创建HTTP请求
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("accept", "*/*")
-                .addHeader("accept-language", "zh-CN,zh;q=0.9")
-                .addHeader("content-type", "application/json")
-                .addHeader("kbn-version", "7.10.1")
-                .addHeader("origin", "https://es-elk-kibana2.yonghuivip.com")
-                .addHeader("priority", "u=1, i")
-                .addHeader("referer", "https://es-elk-kibana2.yonghuivip.com/s/cp-hcfk/app/discover")
-                .addHeader("sec-ch-ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
-                .addHeader("sec-ch-ua-mobile", "?0")
-                .addHeader("sec-ch-ua-platform", "\"macOS\"")
-                .addHeader("sec-fetch-dest", "empty")
-                .addHeader("sec-fetch-mode", "cors")
-                .addHeader("sec-fetch-site", "same-origin")
-                .addHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
-                .addHeader("Cookie", "sensorsdata2015jssdkchannel=%7B%22prop%22%3A%7B%22_sa_channel_landing_url%22%3A%22%22%7D%7D; sensorsdata2015jssdkcrossmiddle_track_web=%7B%22distinct_id%22%3A%2210001%22%2C%22first_id%22%3A%221907bb7f36a991-01bbf1ac243d863-19525637-1764000-1907bb7f36b10ed%22%2C%22props%22%3A%7B%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfbG9naW5faWQiOiIxMDAwMSIsIiRpZGVudGl0eV9jb29raWVfaWQiOiIxOTA3YmI3ZjM2YTk5MS0wMWJiZjFhYzI0M2Q4NjMtMTk1MjU2MzctMTc2NDAwMC0xOTA3YmI3ZjM2YjEwZWQifQ%3D%3D%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%24identity_login_id%22%2C%22value%22%3A%2210001%22%7D%2C%22%24device_id%22%3A%221907bb7f36a991-01bbf1ac243d863-19525637-1764000-1907bb7f36b10ed%22%7D; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22197345925498b3-0d9f5bef6cca8d8-19525636-2073600-1973459254a4bf%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTk3MzQ1OTI1NDk4YjMtMGQ5ZjViZWY2Y2NhOGQ4LTE5NTI1NjM2LTIwNzM2MDAtMTk3MzQ1OTI1NGE0YmYifQ%3D%3D%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%221904e4e47f9637-0dec8b9fa3daa3-19525637-1764000-1904e4e47fa725%22%7D")
+//                .addHeader("accept", "*/*")
+//                .addHeader("accept-language", "zh-CN,zh;q=0.9")
+//                .addHeader("content-type", "application/json")
+//                .addHeader("kbn-version", "7.10.1")
+                .header("content-type", "application/json")
+                .header("kbn-version", "7.10.1")
+
+//                .addHeader("origin", "https://es-elk-kibana2.yonghuivip.com")
+//                .addHeader("priority", "u=1, i")
+//                .addHeader("referer", "https://es-elk-kibana2.yonghuivip.com/s/cp-hcfk/app/discover")
+//                .addHeader("sec-ch-ua", "\"Google Chrome\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"")
+//                .addHeader("sec-ch-ua-mobile", "?0")
+//                .addHeader("sec-ch-ua-platform", "\"macOS\"")
+//                .addHeader("sec-fetch-dest", "empty")
+//                .addHeader("sec-fetch-mode", "cors")
+//                .addHeader("sec-fetch-site", "same-origin")
+//                .addHeader("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
+//                .addHeader("Cookie", "sensorsdata2015jssdkchannel=%7B%22prop%22%3A%7B%22_sa_channel_landing_url%22%3A%22%22%7D%7D; sensorsdata2015jssdkcrossmiddle_track_web=%7B%22distinct_id%22%3A%2210001%22%2C%22first_id%22%3A%221907bb7f36a991-01bbf1ac243d863-19525637-1764000-1907bb7f36b10ed%22%2C%22props%22%3A%7B%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfbG9naW5faWQiOiIxMDAwMSIsIiRpZGVudGl0eV9jb29raWVfaWQiOiIxOTA3YmI3ZjM2YTk5MS0wMWJiZjFhYzI0M2Q4NjMtMTk1MjU2MzctMTc2NDAwMC0xOTA3YmI3ZjM2YjEwZWQifQ%3D%3D%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%24identity_login_id%22%2C%22value%22%3A%2210001%22%7D%2C%22%24device_id%22%3A%221907bb7f36a991-01bbf1ac243d863-19525637-1764000-1907bb7f36b10ed%22%7D; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22197345925498b3-0d9f5bef6cca8d8-19525636-2073600-1973459254a4bf%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTk3MzQ1OTI1NDk4YjMtMGQ5ZjViZWY2Y2NhOGQ4LTE5NTI1NjM2LTIwNzM2MDAtMTk3MzQ1OTI1NGE0YmYifQ%3D%3D%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%221904e4e47f9637-0dec8b9fa3daa3-19525637-1764000-1904e4e47fa725%22%7D")
                 .post(bodyContent)
                 .build();
 
         // 发送请求并获取响应
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) {
-            throw new IOException("Unexpected response code: " + response.code());
+            throw new IOException("Unexpected response code: " + response.code()+response.message());
         }
         String string = response.body().string();
         return string;

@@ -62,44 +62,44 @@ public class EasyExcelExportUtils {
     }
 
 
-//    public static void easyUtil(HttpServletResponse response, String fileName, List<String> heads, List<Map<String, Object>> list)
-//            throws IOException {
-//
-//        if (StringUtils.isEmpty(fileName)){ //文件名称也可以动态获取
-//            fileName = System.currentTimeMillis() + ".xlsx";
-//        } else {
-//            fileName = fileName + ".xlsx";
-//        }
-//
-//        if(heads == null || heads.size() == 0){
-//            heads = makeHeads();
-//        }
-//        if(list == null || list.size() == 0){
-//            list = makeData();
-//        }
-//        // 调用responseInfo方法
-//        OutputStream os= responseInfo(response, fileName);
-//
-//        List<List<String>> hs = new ArrayList<>();
-//        for (String s : heads) {
-//            hs.add(Arrays.asList(s));
-//        }
-//        List<List<Object>> list2 = new ArrayList<>();
-//        for (Map<String, Object> map : list) {
-//            List<Object> objects = new ArrayList<>();
-//            for (String head : heads) {
-//                Object value = map.get(head);
-//                if (value != null){
-//                    objects.add(value.toString());
-//                }else {
-//                    objects.add(null);
-//                }
-//            }
-//            list2.add(objects);
-//        }
-//        EasyExcel.write(os).head(hs).sheet("导出的excel文件名称").doWrite(list2);
-//        System.out.println("导出成功");
-//    }
+    public static void easyUtil(HttpServletResponse response, String fileName, List<String> heads, List<Map<String, Object>> list)
+            throws IOException {
+
+        if (StringUtils.isEmpty(fileName)){ //文件名称也可以动态获取
+            fileName = System.currentTimeMillis() + ".xlsx";
+        } else {
+            fileName = fileName + ".xlsx";
+        }
+
+        if(heads == null || heads.size() == 0){
+            heads = makeHeads();
+        }
+        if(list == null || list.size() == 0){
+            list = makeData();
+        }
+        // 调用responseInfo方法
+        OutputStream os= responseInfo(response, fileName);
+
+        List<List<String>> hs = new ArrayList<>();
+        for (String s : heads) {
+            hs.add(Arrays.asList(s));
+        }
+        List<List<Object>> list2 = new ArrayList<>();
+        for (Map<String, Object> map : list) {
+            List<Object> objects = new ArrayList<>();
+            for (String head : heads) {
+                Object value = map.get(head);
+                if (value != null){
+                    objects.add(value.toString());
+                }else {
+                    objects.add(null);
+                }
+            }
+            list2.add(objects);
+        }
+        EasyExcel.write(os).head(hs).sheet("导出的excel文件名称").doWrite(list2);
+        System.out.println("导出成功");
+    }
 
 
     private static List<String> makeHeads() {

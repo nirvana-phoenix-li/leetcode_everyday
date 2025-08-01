@@ -1,4 +1,4 @@
-package everyday.y2025;
+package everyday.y2025.june;
 
 import java.util.HashMap;
 import java.util.List;

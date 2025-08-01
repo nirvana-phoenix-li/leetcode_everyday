@@ -1,4 +1,4 @@
-package everyday.y2025;
+package everyday.y2025.june;
 
 /**
  * 55. 跳跃游戏

@@ -1,4 +1,4 @@
-package everyday.y2025;
+package everyday.y2025.june;
 
 /**
  * 2014. 重复 K 次的最长子序列

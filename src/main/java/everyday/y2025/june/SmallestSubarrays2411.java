@@ -1,4 +1,4 @@
-package everyday.y2025;
+package everyday.y2025.june;
 
 /**
  * 2411. 按位或最大的最小子数组长度

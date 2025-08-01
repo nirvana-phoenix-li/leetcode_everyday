@@ -1,4 +1,4 @@
-package everyday.y2025;
+package everyday.y2025.june;
 
 /**
  * 3307. 找出第 K 个字符 II

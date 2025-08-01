@@ -1,4 +1,4 @@
-package everyday.y2025;
+package everyday.y2025.june;
 
 /**
  * 3169. 无需开会的工作日

@@ -16,14 +16,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class AttainLogPlanB {
     public static void main(String[] args) throws Exception {
-//        for (int i = 0; i <16 ; i++) {
-//            executor(i);
-//        }
+        for (int i = 0; i < 16; i++) {
+            executor(i);
+        }
         readAndWrite();
     }
 
@@ -48,10 +50,10 @@ public class AttainLogPlanB {
 
                         if (hashMap.containsKey(esKey)) {
                             Set<String> stringSet = hashMap.get(esKey);
-                            extracted(indicator,stringSet);
-                        }else {
+                            extracted(indicator, stringSet);
+                        } else {
                             Set<String> stringSet = new HashSet<>();
-                            extracted(indicator,stringSet);
+                            extracted(indicator, stringSet);
                             hashMap.put(esKey, stringSet);
                         }
                     }
@@ -112,11 +114,15 @@ public class AttainLogPlanB {
         int requestCount = 0;
         for (int k = 0; k < 20 * 60; k++) {
 
+            HashMap<String, String> stringHashMap = new HashMap<>();
+            stringHashMap.put("进入", "");
+            stringHashMap.put("结束", "and");
+
             String response = null;
             int redo = 0;
             while (response == null || response.startsWith("{\"id\"")) {
                 redo++;
-                response = callElasticSearchAPI(originalStart.toString(), originalEnd.toString());
+                response = callElasticSearchAPI(originalStart.toString(), originalEnd.toString(), stringHashMap);
             }
             System.out.println("当前为第" + k + "次，重试次数为: " + (redo - 1));
             System.out.println("API响应长度: " + response.length());
@@ -207,7 +213,7 @@ public class AttainLogPlanB {
      * 调用ElasticSearch API的方法
      * 对应新的curl命令的Java实现
      */
-    public static String callElasticSearchAPI(String startTime, String endTime) throws IOException {
+    public static String callElasticSearchAPI(String startTime, String endTime, HashMap<String, String> inputHashMap) throws IOException {
         // 请求URL
         String url = "https://es-elk-kibana2.yonghuivip.com/s/cp-hcfk/internal/search/ese";
 
@@ -217,7 +223,7 @@ public class AttainLogPlanB {
         JSONObject body = new JSONObject();
 
         // 设置基本参数
-        params.put("index", "*:logstash*cp-hcfk_risk-core_2*");
+        params.put("index", "*:logstash*cp-hcfk_risk-center_2*");
 
         // 设置body内容
         body.put("version", true);
@@ -261,10 +267,12 @@ public class AttainLogPlanB {
         JSONObject boolQuery = new JSONObject();
         boolQuery.put("must", new Object[]{});
 
-        JSONObject multiMatch = new JSONObject();
-        multiMatch.put("type", "phrase");
-        multiMatch.put("query", "风控特征计算服务queryFeatureEsOriginalResult");
-        multiMatch.put("lenient", true);
+        JSONObject multiMatchWrapper = new JSONObject();
+
+        int size = inputHashMap.size();
+
+        List<String> collect = inputHashMap.keySet().stream().collect(Collectors.toList());
+        cursiveMultipalParam(inputHashMap, collect, size, multiMatchWrapper);
 
         JSONObject rangeQuery = new JSONObject();
         JSONObject timestampRange = new JSONObject();
@@ -276,8 +284,6 @@ public class AttainLogPlanB {
         timestampRange.put("format", "strict_date_optional_time");
         rangeQuery.put("@timestamp", timestampRange);
 
-        JSONObject multiMatchWrapper = new JSONObject();
-        multiMatchWrapper.put("multi_match", multiMatch);
         JSONObject rangeWrapper = new JSONObject();
         rangeWrapper.put("range", rangeQuery);
         boolQuery.put("filter", new Object[]{multiMatchWrapper, rangeWrapper});
@@ -319,9 +325,6 @@ public class AttainLogPlanB {
                 .post(bodyContent)
                 .build();
 
-//        System.out.println("发送请求到: " + url);
-//        System.out.println("请求体: " + requestBody.toJSONString());
-
         // 发送请求并获取响应
         Response response = client.newCall(request).execute();
         String responseBody = response.body().string();
@@ -335,47 +338,50 @@ public class AttainLogPlanB {
         return responseBody;
     }
 
-    /**
-     * 使用ProcessBuilder执行curl命令的方法
-     * 作为备选方案，直接调用系统curl命令
-     */
-    public static String executeCurlCommand(String startTime, String endTime) throws IOException, InterruptedException {
-        String[] command = {
-                "curl",
-                "--location",
-                "https://es-elk-kibana2.yonghuivip.com/s/cp-hcfk/internal/search/ese",
-                "--header", "content-type: application/json",
-                "--header", "kbn-version: 7.10.1",
-                "--data-raw", "{\"params\":{\"index\":\"*:logstash*cp-hcfk_risk-core_2*\",\"body\":{\"version\":true,\"size\":500,\"sort\":[{\"@timestamp\":{\"order\":\"desc\",\"unmapped_type\":\"boolean\"}}],\"aggs\":{\"2\":{\"date_histogram\":{\"field\":\"@timestamp\",\"fixed_interval\":\"100ms\",\"time_zone\":\"Asia/Shanghai\",\"min_doc_count\":1}}},\"stored_fields\":[\"*\"],\"script_fields\":{},\"docvalue_fields\":[{\"field\":\"@timestamp\",\"format\":\"date_time\"}],\"_source\":{\"excludes\":[]},\"query\":{\"bool\":{\"must\":[],\"filter\":[{\"multi_match\":{\"type\":\"phrase\",\"query\":\"风控特征计算服务\",\"lenient\":true}},{\"range\":{\"@timestamp\":{\"gte\":\"" + startTime + ".000Z\",\"lte\":\"" + endTime + ".000Z\",\"format\":\"strict_date_optional_time\"}}}],\"should\":[],\"must_not\":[]}},\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"fragment_size\":2147483647}},\"preference\":1751449377180}}"
-        };
+    private static void cursiveMultipalParam(HashMap<String, String> inputHashMap, List<String> indexList, int size, JSONObject headJsonObject) {
+        size--;
 
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        Process process = processBuilder.start();
+        JSONObject multiMatch = new JSONObject();
+        String s = inputHashMap.get(indexList.get(size));
+        if (size != 0) {
+            JSONObject cursiveBool = new JSONObject();
+            JSONObject cursiveJson = new JSONObject();
 
-        // 先等待进程完成，避免死锁
-        int exitCode = process.waitFor();
+            JSONObject paramsJson = new JSONObject();
+            String first = indexList.get(size);
+            String second = inputHashMap.get(first);
+            paramsJson.put("type", "phrase");
+            paramsJson.put("query", first);
+            paramsJson.put("lenient", true);
 
-        // 然后读取输出
-        String output = readInputStream(process.getInputStream());
-        String error = readInputStream(process.getErrorStream());
+            if ("and not".equals(second)) {
+                JSONObject paramsBool = new JSONObject();
+                headJsonObject.put("bool", paramsBool);
+                JSONObject mustNot = new JSONObject();
+                paramsBool.put("must_not", mustNot);
+                mustNot.put("multi_match", paramsJson);
+                cursiveBool.put("filter", new Object[]{cursiveJson, paramsBool});
 
-        if (exitCode != 0) {
-            throw new RuntimeException("Curl command failed with exit code " + exitCode + ": " + error);
+            } else {
+                cursiveBool.put("filter", new Object[]{cursiveJson, paramsJson});
+            }
+            headJsonObject.put("bool", cursiveBool);
+            cursiveMultipalParam(inputHashMap, indexList, size, cursiveJson);
+
+
+        } else {
+            if (inputHashMap.get(s) != null && "and not".equals(inputHashMap.get(s))) {
+                JSONObject mustNot = new JSONObject();
+                headJsonObject.put("must_not", mustNot);
+                mustNot.put("multi_match", multiMatch);
+            } else {
+                headJsonObject.put("multi_match", multiMatch);
+            }
+            multiMatch.put("type", "phrase");
+            multiMatch.put("query", s);
+            multiMatch.put("lenient", true);
         }
-
-        return output;
     }
 
-    /**
-     * 读取输入流的辅助方法
-     */
-    private static String readInputStream(java.io.InputStream inputStream) throws IOException {
-        StringBuilder result = new StringBuilder();
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = inputStream.read(buffer)) != -1) {
-            result.append(new String(buffer, 0, bytesRead));
-        }
-        return result.toString();
-    }
+
 }

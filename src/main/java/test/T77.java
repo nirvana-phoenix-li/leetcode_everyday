@@ -1,27 +1,14 @@
 package test;
 
 
-import com.alibaba.fastjson.JSON;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashSet;
-import java.util.List;
 
 public class T77 {
     public static void main(String[] args) {
 
-        HashSet<String> hashSet = new HashSet<>();
+        double v = 13 / 16d;
 
-        String s = "[1D, 1H]";
-        extracted(s, hashSet);
-
-        System.out.println(hashSet);
-
-        List<String> strings = JSON.parseArray(String.valueOf("[\"实号\", \"\"]"), String.class);
-        System.out.println(strings);
-
-        String[] split = StringUtils.split(",");
-        System.out.println(split);
+        System.out.println(v);
 
     }
 
@@ -30,11 +17,11 @@ public class T77 {
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '[') {
                 continue;
-            } else if (s.charAt(i) == ','|| s.charAt(i) == ']') {
+            } else if (s.charAt(i) == ',' || s.charAt(i) == ']') {
                 hashSet.add(sb.toString());
                 sb = new StringBuilder();
                 i++;
-            }else {
+            } else {
                 sb.append(s.charAt(i));
             }
         }

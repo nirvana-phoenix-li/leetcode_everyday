@@ -1,6 +1,9 @@
 package everyday.y2025.august;
 
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 /**
  * 3479. 水果成篮 III
  * 中等
@@ -64,17 +67,27 @@ package everyday.y2025.august;
  */
 public class NumOfUnplacedFruits3479 {
     public static void main(String[] args) {
+        NumOfUnplacedFruits3479 main = new NumOfUnplacedFruits3479();
+
+        int[] fruits = {3,6,1};
+        int[] baskets = {6,4,7};
+        int i = main.numOfUnplacedFruits(fruits, baskets);
+        System.out.println(i);
+
 
     }
 
     public int numOfUnplacedFruits(int[] fruits, int[] baskets) {
-
+        ArrayList<Integer> helpList = new ArrayList<>();
+        for (int basket : baskets) {
+            helpList.add(basket);
+        }
         int answer = 0;
         for (int i = 0; i < fruits.length; i++) {
             boolean haveFind=false;
-            for (int j = 0; j < baskets.length; j++) {
-                if (fruits[i] <= baskets[j]) {
-                    baskets[j] = -1;
+            for (int j = 0; j < helpList.size(); j++) {
+                if (fruits[i] <= helpList.get(j)) {
+                    helpList.remove(j);
                     haveFind=true;
                     break;
                 }
@@ -82,7 +95,6 @@ public class NumOfUnplacedFruits3479 {
             if (!haveFind) {
                 answer++;
             }
-
         }
         return answer;
     }

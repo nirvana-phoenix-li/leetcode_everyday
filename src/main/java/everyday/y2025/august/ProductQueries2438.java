@@ -2,6 +2,7 @@ package everyday.y2025.august;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * 2438. 二的幂数组中查询范围内的乘积
@@ -58,12 +59,11 @@ public class ProductQueries2438 {
         ProductQueries2438 main = new ProductQueries2438();
         int[][] ints = {{0, 1}, {2, 2}, {0, 3}};
         int[] ints1 = main.productQueries(15, ints);
+        System.out.println(Arrays.toString(ints1));
 
     }
 
     public int[] productQueries(int n, int[][] queries) {
-
-
         ArrayList<Integer> arrayList = new ArrayList<>();
         int temp = 1;
         int counter = 0;
@@ -83,7 +83,8 @@ public class ProductQueries2438 {
             for (int j = first; j <= second; j++) {
                 helpCount+=arrayList.get(j);
             }
-            resultArr[i] = 1<< helpCount;
+            int original = 1 << helpCount;
+            resultArr[i] = original%(1000*1000*1000+7);
 
         }
         return resultArr;

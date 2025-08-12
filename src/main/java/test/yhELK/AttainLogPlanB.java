@@ -370,16 +370,16 @@ public class AttainLogPlanB {
 
 
         } else {
-            if (inputHashMap.get(s) != null && "and not".equals(inputHashMap.get(s))) {
-                JSONObject mustNot = new JSONObject();
-                headJsonObject.put("must_not", mustNot);
-                mustNot.put("multi_match", multiMatch);
-            } else {
-                headJsonObject.put("multi_match", multiMatch);
-            }
-            multiMatch.put("type", "phrase");
-            multiMatch.put("query", s);
-            multiMatch.put("lenient", true);
+//            if (inputHashMap.get(s) != null && "and not".equals(inputHashMap.get(s))) {
+//                JSONObject mustNot = new JSONObject();
+//                headJsonObject.put("must_not", mustNot);
+//                mustNot.put("multi_match", multiMatch);
+//            } else {
+//                headJsonObject.put("multi_match", multiMatch);
+//            }
+            headJsonObject.put("type", "phrase");
+            headJsonObject.put("query", indexList.get(size));
+            headJsonObject.put("lenient", true);
         }
     }
 

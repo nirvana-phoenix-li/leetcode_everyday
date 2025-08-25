@@ -108,15 +108,15 @@ public class AttainLogPlanB {
 
         //实际查询时间是 8个小时之后，有时差
         int stepSecond = 3;
-        LocalDateTime originalStart = LocalDateTime.of(2025, 7, 3, number, 0, 0, 0);
+        LocalDateTime originalStart = LocalDateTime.of(2025, 8, 11, number, 0, 0, 0);
         LocalDateTime originalEnd = originalStart.plusSeconds(stepSecond);
 
         int requestCount = 0;
         for (int k = 0; k < 20 * 60; k++) {
 
             HashMap<String, String> stringHashMap = new HashMap<>();
-            stringHashMap.put("进入", "");
-            stringHashMap.put("结束", "and");
+            stringHashMap.put("进入风控", "");
+//            stringHashMap.put("结束", "and");
 
             String response = null;
             int redo = 0;
@@ -227,7 +227,7 @@ public class AttainLogPlanB {
 
         // 设置body内容
         body.put("version", true);
-        body.put("size", 1000);
+        body.put("size", 500); // 改为500，与curl一致
 
         // 设置排序
         JSONObject sortObj = new JSONObject();
@@ -242,7 +242,7 @@ public class AttainLogPlanB {
         JSONObject agg2 = new JSONObject();
         JSONObject dateHistogram = new JSONObject();
         dateHistogram.put("field", "@timestamp");
-        dateHistogram.put("fixed_interval", "100ms");
+        dateHistogram.put("fixed_interval", "300m"); // 改为30m，与curl一致
         dateHistogram.put("time_zone", "Asia/Shanghai");
         dateHistogram.put("min_doc_count", 1);
         agg2.put("date_histogram", dateHistogram);
@@ -267,13 +267,20 @@ public class AttainLogPlanB {
         JSONObject boolQuery = new JSONObject();
         boolQuery.put("must", new Object[]{});
 
-        JSONObject multiMatchWrapper = new JSONObject();
-
-        int size = inputHashMap.size();
-
-        List<String> collect = inputHashMap.keySet().stream().collect(Collectors.toList());
-        cursiveMultipalParam(inputHashMap, collect, size, multiMatchWrapper);
-
+        // 构建filter数组
+        JSONObject boolFilter = new JSONObject();
+        Object[] boolFilterArray = new Object[inputHashMap.size()];
+        
+        int index = 0;
+        for (String key : inputHashMap.keySet()) {
+            JSONObject multiMatch = new JSONObject();
+            multiMatch.put("type", "phrase");
+            multiMatch.put("query", key);
+            multiMatch.put("lenient", true);
+            boolFilterArray[index++] = new JSONObject().put("multi_match", multiMatch);
+        }
+        
+        boolFilter.put("filter", boolFilterArray);
         JSONObject rangeQuery = new JSONObject();
         JSONObject timestampRange = new JSONObject();
         // 修复时间格式，确保包含秒和毫秒
@@ -286,7 +293,7 @@ public class AttainLogPlanB {
 
         JSONObject rangeWrapper = new JSONObject();
         rangeWrapper.put("range", rangeQuery);
-        boolQuery.put("filter", new Object[]{multiMatchWrapper, rangeWrapper});
+        boolQuery.put("filter", new Object[]{new JSONObject().put("bool", boolFilter), rangeWrapper});
         boolQuery.put("should", new Object[]{});
         boolQuery.put("must_not", new Object[]{});
         query.put("bool", boolQuery);
@@ -301,8 +308,12 @@ public class AttainLogPlanB {
         body.put("highlight", highlight);
 
         params.put("body", body);
-        params.put("preference", 1751449377180L);
+        params.put("preference", 1754986734687L); // 使用curl中的preference值
         requestBody.put("params", params);
+        
+        // 调试：打印生成的JSON
+//        System.out.println("生成的请求JSON:");
+//        System.out.println(requestBody.toJSONString());
 
         // 创建OkHttp客户端
         OkHttpClient client = new OkHttpClient.Builder()
@@ -317,11 +328,24 @@ public class AttainLogPlanB {
                 requestBody.toJSONString()
         );
 
-        // 创建HTTP请求
+        // 创建HTTP请求 - 添加curl中的所有重要请求头
         Request request = new Request.Builder()
                 .url(url)
-                .header("content-type", "application/json")
+                .header("accept", "*/*")
+                .header("accept-language", "zh-CN,zh;q=0.9")
+                .header("content-type", "applicat  ion/json")
                 .header("kbn-version", "7.10.1")
+                .header("origin", "https://es-elk-kibana2.yonghuivip.com")
+                .header("priority", "u=1, i")
+                .header("referer", "https://es-elk-kibana2.yonghuivip.com/s/cp-hcfk/app/discover")
+                .header("sec-ch-ua", "\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Google Chrome\";v=\"138\"")
+                .header("sec-ch-ua-mobile", "?0")
+                .header("sec-ch-ua-platform", "\"macOS\"")
+                .header("sec-fetch-dest", "empty")
+                .header("sec-fetch-mode", "cors")
+                .header("sec-fetch-site", "same-origin")
+                .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36")
+                .header("Cookie", "sensorsdata2015jssdkchannel=%7B%22prop%22%3A%7B%22_sa_channel_landing_url%22%3A%22%22%7D%7D; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22197345925498b3-0d9f5bef6cca8d8-19525636-2073600-1973459254a4bf%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTk3MzQ1OTI1NDk4YjMtMGQ5ZjViZWY2Y2NhOGQ4LTE5NTI1NjM2LTIwNzM2MDAtMTk3MzQ1OTI1NGE0YmYifQ%3D%3D%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%221904e4e47f9637-0dec8b9fa3daa3-19525637-1764000-1904e4e47fa725%22%7D")
                 .post(bodyContent)
                 .build();
 
@@ -338,38 +362,38 @@ public class AttainLogPlanB {
         return responseBody;
     }
 
-    private static void cursiveMultipalParam(HashMap<String, String> inputHashMap, List<String> indexList, int size, JSONObject headJsonObject) {
-        size--;
-
-        JSONObject multiMatch = new JSONObject();
-        String s = inputHashMap.get(indexList.get(size));
-        if (size != 0) {
-            JSONObject cursiveBool = new JSONObject();
-            JSONObject cursiveJson = new JSONObject();
-
-            JSONObject paramsJson = new JSONObject();
-            String first = indexList.get(size);
-            String second = inputHashMap.get(first);
-            paramsJson.put("type", "phrase");
-            paramsJson.put("query", first);
-            paramsJson.put("lenient", true);
-
-            if ("and not".equals(second)) {
-                JSONObject paramsBool = new JSONObject();
-                headJsonObject.put("bool", paramsBool);
-                JSONObject mustNot = new JSONObject();
-                paramsBool.put("must_not", mustNot);
-                mustNot.put("multi_match", paramsJson);
-                cursiveBool.put("filter", new Object[]{cursiveJson, paramsBool});
-
-            } else {
-                cursiveBool.put("filter", new Object[]{cursiveJson, paramsJson});
-            }
-            headJsonObject.put("bool", cursiveBool);
-            cursiveMultipalParam(inputHashMap, indexList, size, cursiveJson);
-
-
-        } else {
+//    private static void cursiveMultipalParam(HashMap<String, String> inputHashMap, List<String> indexList, int size, JSONObject headJsonObject) {
+//        size--;
+//
+//        JSONObject multiMatch = new JSONObject();
+//        String s = inputHashMap.get(indexList.get(size));
+//        if (size != 0) {
+//            JSONObject cursiveBool = new JSONObject();
+//            JSONObject cursiveJson = new JSONObject();
+//
+//            JSONObject paramsJson = new JSONObject();
+//            String first = indexList.get(size);
+//            String second = inputHashMap.get(first);
+//            paramsJson.put("type", "phrase");
+//            paramsJson.put("query", first);
+//            paramsJson.put("lenient", true);
+//
+//            if ("and not".equals(second)) {
+//                JSONObject paramsBool = new JSONObject();
+//                headJsonObject.put("bool", paramsBool);
+//                JSONObject mustNot = new JSONObject();
+//                paramsBool.put("must_not", mustNot);
+//                mustNot.put("multi_match", paramsJson);
+//                cursiveBool.put("filter", new Object[]{cursiveJson, paramsBool});
+//
+//            } else {
+//                cursiveBool.put("filter", new Object[]{cursiveJson, paramsJson});
+//            }
+//            headJsonObject.put("bool", cursiveBool);
+//            cursiveMultipalParam(inputHashMap, indexList, size, cursiveJson);
+//
+//
+//        } else {
 //            if (inputHashMap.get(s) != null && "and not".equals(inputHashMap.get(s))) {
 //                JSONObject mustNot = new JSONObject();
 //                headJsonObject.put("must_not", mustNot);
@@ -377,11 +401,11 @@ public class AttainLogPlanB {
 //            } else {
 //                headJsonObject.put("multi_match", multiMatch);
 //            }
-            headJsonObject.put("type", "phrase");
-            headJsonObject.put("query", indexList.get(size));
-            headJsonObject.put("lenient", true);
-        }
-    }
+//            multiMatch.put("type", "phrase");
+//            multiMatch.put("query", indexList.get(size));
+//            multiMatch.put("lenient", true);
+//        }
+//    }
 
 
 }

@@ -1,29 +1,13 @@
 package test;
 
 
-import java.util.HashSet;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class T77 {
     public static void main(String[] args) {
-
-        double v = 13 / 16d;
-
-        System.out.println(v);
-
+        int i = 100 % 1;
+        System.out.println(i);
     }
 
-    private static void extracted(String s, HashSet<String> hashSet) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '[') {
-                continue;
-            } else if (s.charAt(i) == ',' || s.charAt(i) == ']') {
-                hashSet.add(sb.toString());
-                sb = new StringBuilder();
-                i++;
-            } else {
-                sb.append(s.charAt(i));
-            }
-        }
-    }
 }

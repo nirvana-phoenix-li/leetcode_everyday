@@ -1,6 +1,8 @@
 package everyday.y2025.august;
 
 
+import java.util.Arrays;
+
 /**
  * 498. 对角线遍历
  * 中等
@@ -41,34 +43,58 @@ package everyday.y2025.august;
  */
 public class FindDiagonalOrder498 {
     public static void main(String[] args) {
+//        [[1,2,3],[4,5,6],[7,8,9]]
+        int[][] ints = {{1, 2}, {3, 4}};
+        int[] diagonalOrder = new FindDiagonalOrder498().findDiagonalOrder(ints);
 
+        System.out.println(Arrays.toString(diagonalOrder));
     }
 
 
     public int[] findDiagonalOrder(int[][] mat) {
         int col = mat.length;
         int row = mat[0].length;
-        int[] answer = new int[col * row];
+        int total = col * row;
+        int[] answer = new int[total];
+
         int answerIndex = 0;
         boolean flag = true;//true is up and right
         int tempCol = 0;
         int tempRow = 0;
-        while (tempCol!=col && tempRow!=row){
-            while (tempCol!=0&&tempRow<row&&flag) {
+        while (answerIndex< total) {
+            while (tempCol >= 0 && tempRow < row &&answerIndex< total) {
                 answer[answerIndex++] = mat[tempCol][tempRow];
+                if (tempCol == 0) {
+                    if (tempRow == row - 1) {
+                        tempCol++;
+                        break;
+                    }
+                    tempRow++;
+                    break;
+                }
+                if (tempRow == row - 1) {
+                    tempCol--;
+                    break;
+                }
                 tempCol--;
                 tempRow++;
             }
-            flag=false;
-            while (tempCol<col&&tempRow!=0&&!flag) {
+            flag = false;
+            while (tempCol < col && tempRow >= 0 &&answerIndex< total) {
                 answer[answerIndex++] = mat[tempCol][tempRow];
+                if (tempRow == 0) {
+                    tempCol++;
+                    break;
+                }
+                if (tempCol == col - 1) {
+                    tempRow++;
+                    break;
+                }
                 tempCol++;
                 tempRow--;
             }
-            flag=true;
+            flag = true;
         }
-
-
         return answer;
     }
 }

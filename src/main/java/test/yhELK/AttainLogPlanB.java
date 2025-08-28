@@ -116,7 +116,8 @@ public class AttainLogPlanB {
 
             HashMap<String, String> stringHashMap = new HashMap<>();
             stringHashMap.put("进入风控", "");
-//            stringHashMap.put("结束", "and");
+            stringHashMap.put("结束", "and");
+            stringHashMap.put("双跑", "and not");
 
             String response = null;
             int redo = 0;

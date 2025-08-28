@@ -17,7 +17,7 @@ public class T99888 {
         String addr1 = "河北省石家庄市裕华区万达广场";
         String addr2 = "河北石家庄市裕华万达广场";
         String addr3 = "河北石家庄市裕华万达公馆";
-        Long.parseLong("ss ")
+        Long.parseLong("ss ");
 
 
         List<String> addr1List = hanlpSeg(addr1);

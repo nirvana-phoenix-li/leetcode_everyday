@@ -1,5 +1,6 @@
 package test.yhELK;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import entity.Indicator;
 import jxl.Sheet;
@@ -108,7 +109,7 @@ public class AttainLogPlanB {
 
         //实际查询时间是 8个小时之后，有时差
         int stepSecond = 3;
-        LocalDateTime originalStart = LocalDateTime.of(2025, 8, 11, number, 0, 0, 0);
+        LocalDateTime originalStart = LocalDateTime.of(2025, 8, 27, number, 0, 0, 0);
         LocalDateTime originalEnd = originalStart.plusSeconds(stepSecond);
 
         int requestCount = 0;
@@ -270,18 +271,46 @@ public class AttainLogPlanB {
 
         // 构建filter数组
         JSONObject boolFilter = new JSONObject();
-        Object[] boolFilterArray = new Object[inputHashMap.size()];
-        
-        int index = 0;
-        for (String key : inputHashMap.keySet()) {
+        JSONObject virtualhead = boolFilter;
+
+
+        List<String> collect = inputHashMap.keySet().stream().collect(Collectors.toList());
+        for (int i = 0; i < collect.size(); i++) {
+            JSONArray boolFilterArray = new JSONArray();
             JSONObject multiMatch = new JSONObject();
             multiMatch.put("type", "phrase");
-            multiMatch.put("query", key);
+            multiMatch.put("query", collect.get(i));
             multiMatch.put("lenient", true);
-            boolFilterArray[index++] = new JSONObject().put("multi_match", multiMatch);
+
+            JSONObject wrapperJson = new JSONObject();
+            wrapperJson.put("multi_match",multiMatch);
+            boolFilterArray.add(wrapperJson);
+
+
+            if (i != inputHashMap.size() - 2) {
+                JSONObject second = new JSONObject();
+                JSONObject inner = new JSONObject();
+
+                second.put("bool", inner);
+                boolFilterArray.add(second);
+                virtualhead.put("filter", boolFilterArray);
+                virtualhead = inner;
+            } else {
+                JSONObject lastJson = new JSONObject();
+                lastJson.put("type", "phrase");
+                i++;
+                lastJson.put("query", collect.get(i));
+                lastJson.put("lenient", true);
+
+                JSONObject wrapper = new JSONObject();
+                wrapper.put("multi_match",lastJson);
+                boolFilterArray.add(wrapper);
+
+                virtualhead.put("filter", boolFilterArray);
+            }
         }
-        
-        boolFilter.put("filter", boolFilterArray);
+
+
         JSONObject rangeQuery = new JSONObject();
         JSONObject timestampRange = new JSONObject();
         // 修复时间格式，确保包含秒和毫秒
@@ -294,7 +323,9 @@ public class AttainLogPlanB {
 
         JSONObject rangeWrapper = new JSONObject();
         rangeWrapper.put("range", rangeQuery);
-        boolQuery.put("filter", new Object[]{new JSONObject().put("bool", boolFilter), rangeWrapper});
+        JSONObject firstBool = new JSONObject();
+        firstBool.put("bool", boolFilter);
+        boolQuery.put("filter", new Object[]{firstBool, rangeWrapper});
         boolQuery.put("should", new Object[]{});
         boolQuery.put("must_not", new Object[]{});
         query.put("bool", boolQuery);
@@ -311,10 +342,10 @@ public class AttainLogPlanB {
         params.put("body", body);
         params.put("preference", 1754986734687L); // 使用curl中的preference值
         requestBody.put("params", params);
-        
+
         // 调试：打印生成的JSON
-//        System.out.println("生成的请求JSON:");
-//        System.out.println(requestBody.toJSONString());
+        System.out.println("生成的请求JSON:");
+        System.out.println(requestBody.toJSONString());
 
         // 创建OkHttp客户端
         OkHttpClient client = new OkHttpClient.Builder()
@@ -363,50 +394,6 @@ public class AttainLogPlanB {
         return responseBody;
     }
 
-//    private static void cursiveMultipalParam(HashMap<String, String> inputHashMap, List<String> indexList, int size, JSONObject headJsonObject) {
-//        size--;
-//
-//        JSONObject multiMatch = new JSONObject();
-//        String s = inputHashMap.get(indexList.get(size));
-//        if (size != 0) {
-//            JSONObject cursiveBool = new JSONObject();
-//            JSONObject cursiveJson = new JSONObject();
-//
-//            JSONObject paramsJson = new JSONObject();
-//            String first = indexList.get(size);
-//            String second = inputHashMap.get(first);
-//            paramsJson.put("type", "phrase");
-//            paramsJson.put("query", first);
-//            paramsJson.put("lenient", true);
-//
-//            if ("and not".equals(second)) {
-//                JSONObject paramsBool = new JSONObject();
-//                headJsonObject.put("bool", paramsBool);
-//                JSONObject mustNot = new JSONObject();
-//                paramsBool.put("must_not", mustNot);
-//                mustNot.put("multi_match", paramsJson);
-//                cursiveBool.put("filter", new Object[]{cursiveJson, paramsBool});
-//
-//            } else {
-//                cursiveBool.put("filter", new Object[]{cursiveJson, paramsJson});
-//            }
-//            headJsonObject.put("bool", cursiveBool);
-//            cursiveMultipalParam(inputHashMap, indexList, size, cursiveJson);
-//
-//
-//        } else {
-//            if (inputHashMap.get(s) != null && "and not".equals(inputHashMap.get(s))) {
-//                JSONObject mustNot = new JSONObject();
-//                headJsonObject.put("must_not", mustNot);
-//                mustNot.put("multi_match", multiMatch);
-//            } else {
-//                headJsonObject.put("multi_match", multiMatch);
-//            }
-//            multiMatch.put("type", "phrase");
-//            multiMatch.put("query", indexList.get(size));
-//            multiMatch.put("lenient", true);
-//        }
-//    }
 
 
 }

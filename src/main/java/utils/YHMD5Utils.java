@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class YHMD5Utils {
     public static void main(String[] args) {
-        String s = md5("判断是否异常新人用户");
+        String s = md5("被邀请人是否来自用户");
         System.out.println(s);
 
     }

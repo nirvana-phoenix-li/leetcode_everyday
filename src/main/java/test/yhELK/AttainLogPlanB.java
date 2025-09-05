@@ -108,17 +108,18 @@ public class AttainLogPlanB {
         HashMap<String, Set<String>> hashMap = new HashMap<>();
 
         //实际查询时间是 8个小时之后，有时差
-        int stepSecond = 3;
-        LocalDateTime originalStart = LocalDateTime.of(2025, 8, 27, number, 0, 0, 0);
+        int stepSecond = 10;
+        LocalDateTime originalStart = LocalDateTime.of(2025, 9, 1, 9, 10, 0, 0);
         LocalDateTime originalEnd = originalStart.plusSeconds(stepSecond);
 
         int requestCount = 0;
-        for (int k = 0; k < 20 * 60; k++) {
+        for (int k = 0; k < 2; k++) {
 
             HashMap<String, String> stringHashMap = new HashMap<>();
-            stringHashMap.put("进入风控", "");
+            stringHashMap.put("进入风控V2.0", "");
             stringHashMap.put("结束", "and");
-            stringHashMap.put("双跑", "and not");
+            stringHashMap.put("order", "");
+            stringHashMap.put("福州", "");
 
             String response = null;
             int redo = 0;
@@ -128,6 +129,9 @@ public class AttainLogPlanB {
             }
             System.out.println("当前为第" + k + "次，重试次数为: " + (redo - 1));
             System.out.println("API响应长度: " + response.length());
+
+
+
 
             for (int i = 0; i < response.length(); i++) {
                 if (isMatch(response, i, matchString)) {
@@ -177,28 +181,29 @@ public class AttainLogPlanB {
         System.out.println("找到 " + requestCount + " 条匹配记录");
         System.out.println("解析到 " + hashMap.size() + " 个不同的esKey");
 
-        File outputFile = new File("请求指标PlanB" + number + ".xlsx");
-        // 创建一个工作簿
-        WritableWorkbook outputbook = Workbook.createWorkbook(outputFile);
-
-        // 创建一个工作表
-        WritableSheet outputSheet = outputbook.createSheet("sheet1", 1);
-
-        // 添加表头
-        outputSheet.addCell(new Label(0, 0, "esKey"));
-        outputSheet.addCell(new Label(1, 0, "时间列表"));
-
-        int rowIndex = 1;
-        for (String esKey : hashMap.keySet()) {
-            // 向工作表中添加数据
-            outputSheet.addCell(new Label(0, rowIndex, esKey));
-            outputSheet.addCell(new Label(1, rowIndex, hashMap.get(esKey).toString()));
-            rowIndex++;
-        }
-
-        outputbook.write();
-        outputbook.close();
-        System.out.println("Excel文件已生成: " + outputFile.getAbsolutePath());
+//        File outputFile = new File("请求指标PlanB" + number + ".xlsx");
+//        // 创建一个工作簿
+//        WritableWorkbook outputbook = Workbook.createWorkbook(outputFile);
+//
+//        // 创建一个工作表
+//        WritableSheet outputSheet = outputbook.createSheet("sheet1", 1);
+//
+//        // 添加表头
+//        outputSheet.addCell(new Label(0, 0, "esKey"));
+//        outputSheet.addCell(new Label(1, 0, "时间列表"));
+//
+//        int rowIndex = 1;
+//        for (String esKey : hashMap.keySet()) {
+//            // 向工作表中添加数据
+//            outputSheet.addCell(new Label(0, rowIndex, esKey));
+//            outputSheet.addCell(new Label(1, rowIndex, hashMap.get(esKey).toString()));
+//            rowIndex++;
+//        }
+//
+//        outputbook.write();
+//        outputbook.close();
+//        System.out.println("Excel文件已生成: " + outputFile.getAbsolutePath());
+        System.out.println("Excel文件已生成: ");
     }
 
     public static boolean isMatch(String text, int index, String matchString) {

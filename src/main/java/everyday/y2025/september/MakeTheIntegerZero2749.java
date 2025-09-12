@@ -59,6 +59,14 @@ public class MakeTheIntegerZero2749 {
         if (num2 >= num1) {
             return -1;
         }
+        int target = num1 - num2;
+        int currentPow = 1;
+        while (target > (2 << currentPow)) {
+            currentPow <<= 1;
+        }
+
         return answer;
     }
+
+
 }

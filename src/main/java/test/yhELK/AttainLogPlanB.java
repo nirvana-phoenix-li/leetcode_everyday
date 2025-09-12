@@ -1,8 +1,8 @@
 package test.yhELK;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import entity.Indicator;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 
 public class AttainLogPlanB {
     public static void main(String[] args) throws Exception {
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 10; i++) {
             executor(i);
         }
-        readAndWrite();
+//        readAndWrite();
     }
 
     private static void readAndWrite() throws IOException, BiffException, WriteException {
@@ -102,18 +102,16 @@ public class AttainLogPlanB {
         }
     }
 
-    private static void executor(int number) throws IOException, WriteException {
-        String matchString = "风控特征计算服务queryFeatureEsOriginalResult。参数：";
-        String endString = "\"";
-        HashMap<String, Set<String>> hashMap = new HashMap<>();
+    private static void executor(int number) throws IOException, InterruptedException {
 
+        HashMap<String, Set<String>> hashMap = new HashMap<>();
         //实际查询时间是 8个小时之后，有时差
-        int stepSecond = 10;
-        LocalDateTime originalStart = LocalDateTime.of(2025, 9, 1, 9, 10, 0, 0);
+        int stepSecond = 30;
+        LocalDateTime originalStart = LocalDateTime.of(2025, 9, 5, 10, 3, 0, 0);
         LocalDateTime originalEnd = originalStart.plusSeconds(stepSecond);
 
         int requestCount = 0;
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < number; k++) {
 
             HashMap<String, String> stringHashMap = new HashMap<>();
             stringHashMap.put("进入风控V2.0", "");
@@ -130,79 +128,17 @@ public class AttainLogPlanB {
             System.out.println("当前为第" + k + "次，重试次数为: " + (redo - 1));
             System.out.println("API响应长度: " + response.length());
 
+            parseContentSimple(response);
 
-
-
-            for (int i = 0; i < response.length(); i++) {
-                if (isMatch(response, i, matchString)) {
-                    i += matchString.length();
-                    StringBuilder sb = new StringBuilder();
-                    Indicator indicator = new Indicator();
-                    boolean satisfied = false;
-                    for (int j = i; j < Integer.MAX_VALUE; j++) {
-                        if (!satisfied) {
-                            if (response.charAt(j) != ',') {
-                                sb.append(response.charAt(j));
-                            } else {
-                                satisfied = true;
-                                indicator.setTime(sb.toString());
-                            }
-                        } else {
-                            if (isMatch(response, j, endString)) {
-                                indicator.setEsKey(sb.toString());
-                                i = j;
-                                break;
-                            }
-                            if (response.charAt(j) == '_') {
-                                sb = new StringBuilder();
-                            } else {
-                                sb.append(response.charAt(j));
-                            }
-                        }
-                    }
-                    requestCount++;
-
-                    if (hashMap.containsKey(indicator.getEsKey())) {
-                        hashMap.get(indicator.getEsKey()).add(indicator.getTime());
-                    } else {
-                        HashSet<String> hashSet = new HashSet<>();
-                        hashSet.add(indicator.getTime());
-                        hashMap.put(indicator.getEsKey(), hashSet);
-                    }
-
-                }
-
-            }
             originalStart = originalStart.plusSeconds(stepSecond);
             originalEnd = originalEnd.plusSeconds(stepSecond);
 
+            Thread.sleep(30000);
         }
 
         System.out.println("找到 " + requestCount + " 条匹配记录");
         System.out.println("解析到 " + hashMap.size() + " 个不同的esKey");
 
-//        File outputFile = new File("请求指标PlanB" + number + ".xlsx");
-//        // 创建一个工作簿
-//        WritableWorkbook outputbook = Workbook.createWorkbook(outputFile);
-//
-//        // 创建一个工作表
-//        WritableSheet outputSheet = outputbook.createSheet("sheet1", 1);
-//
-//        // 添加表头
-//        outputSheet.addCell(new Label(0, 0, "esKey"));
-//        outputSheet.addCell(new Label(1, 0, "时间列表"));
-//
-//        int rowIndex = 1;
-//        for (String esKey : hashMap.keySet()) {
-//            // 向工作表中添加数据
-//            outputSheet.addCell(new Label(0, rowIndex, esKey));
-//            outputSheet.addCell(new Label(1, rowIndex, hashMap.get(esKey).toString()));
-//            rowIndex++;
-//        }
-//
-//        outputbook.write();
-//        outputbook.close();
-//        System.out.println("Excel文件已生成: " + outputFile.getAbsolutePath());
         System.out.println("Excel文件已生成: ");
     }
 
@@ -288,7 +224,7 @@ public class AttainLogPlanB {
             multiMatch.put("lenient", true);
 
             JSONObject wrapperJson = new JSONObject();
-            wrapperJson.put("multi_match",multiMatch);
+            wrapperJson.put("multi_match", multiMatch);
             boolFilterArray.add(wrapperJson);
 
 
@@ -308,7 +244,7 @@ public class AttainLogPlanB {
                 lastJson.put("lenient", true);
 
                 JSONObject wrapper = new JSONObject();
-                wrapper.put("multi_match",lastJson);
+                wrapper.put("multi_match", lastJson);
                 boolFilterArray.add(wrapper);
 
                 virtualhead.put("filter", boolFilterArray);
@@ -349,8 +285,8 @@ public class AttainLogPlanB {
         requestBody.put("params", params);
 
         // 调试：打印生成的JSON
-        System.out.println("生成的请求JSON:");
-        System.out.println(requestBody.toJSONString());
+//        System.out.println("生成的请求JSON:");
+//        System.out.println(requestBody.toJSONString());
 
         // 创建OkHttp客户端
         OkHttpClient client = new OkHttpClient.Builder()
@@ -399,6 +335,37 @@ public class AttainLogPlanB {
         return responseBody;
     }
 
+    /**
+     * 更简单的方法：使用字符串分割
+     */
+    public static void parseContentSimple(String log) {
+        JSONObject jsonObject = JSON.parseObject(log);
+        JSONObject rawResponse = jsonObject.getJSONObject("rawResponse");
+        JSONObject hits = rawResponse.getJSONObject("hits");
+        JSONArray innerHits = hits.getJSONArray("hits");
+
+        for (Object innerHit : innerHits) {
+            JSONObject findIt = (JSONObject) innerHit;
+            String findItString = findIt.toString();
+            // 移除转义字符
+            String cleanJson = findItString.replace("\\", "");
+            String regx = "\"content\":\"";
+
+            String[] parts = cleanJson.split(regx);
+            if (parts.length < 2) {
+                throw new IllegalArgumentException("content字段未找到");
+            }
+
+            String remaining = parts[2];
+            String[] endParts = remaining.split("\",\"resourceType\"");
+            if (endParts.length < 1) {
+                throw new IllegalArgumentException("content字段结束位置未找到");
+            }
+            JSONObject treasure = JSON.parseObject(endParts[0]);
+            System.out.println("---------------------------------------------------------change line---------------------------------------------------------------------");
+            System.out.println(treasure.toString());
+        }
+    }
 
 
 }

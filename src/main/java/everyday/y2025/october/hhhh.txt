@@ -1,0 +1,78 @@
+import com.alibaba.fastjson.JSONObject
+import com.google.common.collect.Lists
+import com.yonghui.common.order.BomType
+import com.yonghui.common.util.MD5Utils
+import com.yonghui.oms.framework.domain.order.OrderMsgItemDTOV2
+import com.yonghui.oms.framework.enums.order.DeliveryModeEnum
+import com.yonghui.oms.framework.enums.order.SalesChannelEnum
+import com.yonghui.risk.manage.configuration.service.ConfigurationManageClient;
+import com.yonghui.risk.mq.cache.GeneralLongTermCountCacheManager
+import com.yonghui.risk.mq.utils.SpringContextUtil
+import org.apache.commons.collections4.CollectionUtils
+import org.apache.commons.lang3.StringUtils
+import com.yonghui.oms.framework.domain.order.OrderMsgDTOV2;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
+import java.util.stream.Collectors;
+
+Logger log = LoggerFactory.getLogger("cn.yh.sameAreaRelationCouponCount")
+// 订单入参促销编码列表配置
+String ORDER_ARGS_PROMOTION_CODE_LIST = "PROMOTION_CODE_0003";
+
+String message = (String) jsonInfo.get("message");
+OrderMsgDTOV2 dto = JSONObject.parseObject(message, OrderMsgDTOV2.class);
+
+// 销售渠道为 201是app的来源，202是微信，203支付宝。com.yonghui.oms.framework.enums.order.SalesChannelEnum
+// 过滤其他渠道的
+Integer salesChannel = dto.getSalesChannel();
+if (salesChannel == null) {
+    return "failed";
+}
+if (salesChannel != SalesChannelEnum.APP.getValue() && salesChannel != SalesChannelEnum.WECHAT_MINI_PROGRAM.getValue() && salesChannel != SalesChannelEnum.ALIPAY_MINI_PROGRAM.getValue()) {
+    return "failed";
+}
+
+boolean isInTime = dto.getDeliveryMode() != null && (dto.getDeliveryMode() & DeliveryModeEnum.CURRENT_DAY_ARRIVE.getValue()) > 0;
+// 过滤非即时达
+if (!isInTime) {
+    return "failed";
+}
+
+ConfigurationManageClient configurationManageClient = (ConfigurationManageClient) SpringContextUtil.getBean(ConfigurationManageClient.class)
+// 券集合（PROMOTION_CODE_0003）
+List<String> promotionCodeList = configurationManageClient.getSimpleValueFromCache(ORDER_ARGS_PROMOTION_CODE_LIST);
+if (CollectionUtils.isEmpty(promotionCodeList)) {
+    log.info("sameAreaRelationCouponCount PROMOTION_CODE_0003 is empty")
+    return "failed";
+}
+
+// 过滤券信息
+List<String> orderPromotionCodeList = Optional.ofNullable(dto.getOrderMsgCoupons()).orElse(Lists.newArrayList()).stream()
+        .map({ coupon -> coupon.getPromotionCode() }).collect(Collectors.toList());
+// 券是否命中
+Collection<String> intersection = CollectionUtils.intersection(orderPromotionCodeList, promotionCodeList);
+if (CollectionUtils.isEmpty(orderPromotionCodeList) || CollectionUtils.isEmpty(intersection)) {
+    return "failed";
+}
+
+// 商品sku种类数 >= 10, 不计入
+List<OrderMsgItemDTOV2> orderMsgItems = Optional.ofNullable(dto.getOrderMsgItems()).orElse(Lists.newArrayList());
+long itemCount = orderMsgItems.stream()
+        .filter({ item -> !item.getBomType().equals(BomType.CHILD.getValue()) })
+        .count();
+if (itemCount >= 10) {
+    return "failed";
+}
+
+// 大地址
+String receiverArea = dto.getReceiverArea();
+if (StringUtils.isEmpty(receiverArea) || Objects.isNull(dto.getMemberId())) {
+    return "failed";
+}
+String md5Key = MD5Utils.md5(receiverArea);
+
+log.info("sameAreaRelationCouponCount receiverArea:{} , md5Key:{}", receiverArea, md5Key);
+GeneralLongTermCountCacheManager cacheManager = (GeneralLongTermCountCacheManager) SpringContextUtil.getBean(GeneralLongTermCountCacheManager.class);
+cacheManager.saveIndicatorCount(md5Key, String.valueOf(dto.getMemberId()), "sameAreaRelationCoupons");
+return "success"

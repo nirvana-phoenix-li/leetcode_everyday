@@ -1,4 +1,4 @@
-package test;
+package utils;
 
 
 import com.alibaba.fastjson.JSONArray;
@@ -11,34 +11,21 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class T77 {
-    public static void main(String[] args) {
-        T77 main = new T77();
-        URI uri = main.buildCompliantURI("3f791f8a-b211-435f-853b-0c6cff07a5ce");
-        String completeUrl =uri.toASCIIString();
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("key","valueeeeeeeeee");
-        main.sendFeishuMarkdownDirect(completeUrl,"HHHH",hashMap);
-    }
+public class FeiShuWebHookUtil {
 
-    public URI buildCompliantURI(String paramValue) {
-        URI httpsURI = null;
-        try {
-            httpsURI = new URI("https", "open.feishu.cn",
-                    "/open-apis/bot/v2/hook/"+paramValue,
-                    null, null);
-        } catch (Exception e) {
-            System.out.println("buildCompliantURI出现错误,入参为");
-        }
-        return httpsURI;
-    }
 
-    public void sendFeishuMarkdownDirect(String webhookUrl, String title, Map<String, String> contentMap) {
+    /**
+     * 发送飞书卡片消息
+     *
+     * @param webhookUrl 飞书webhook地址
+     * @param title      消息标题
+     * @param contentMap 内容键值对
+     */
+    public static void sendFeishuCard(String webhookUrl, String title, Map<String, String> contentMap) {
         try {
             // 构建markdown内容
             StringBuilder contentBuilder = new StringBuilder();
@@ -53,6 +40,7 @@ public class T77 {
             // 构建请求体
             JSONObject requestBody = new JSONObject();
             requestBody.put("msg_type", "interactive");
+
 
             JSONObject card = new JSONObject();
 
@@ -93,7 +81,7 @@ public class T77 {
     /**
      * 发送HTTP POST请求
      */
-    private void sendHttpPost(String url, JSONObject requestBody) {
+    private static void sendHttpPost(String url, JSONObject requestBody) {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
 
@@ -156,4 +144,20 @@ public class T77 {
         }
     }
 
+
+    /**
+     * 使用示例
+     */
+    public static void main(String[] args) {
+        Map<String, String> params = new HashMap<>();
+        params.put("系统名称", "生产环境服务器");
+        params.put("IP地址", "192.168.1.100");
+        params.put("操作系统", "CentOS 7.9");
+
+        sendFeishuCard(
+                "https://open.feishu.cn/open-apis/bot/v2/hook/918a2de1-6c65-43a5-a806-debea58ff966",
+                "Markdown 消息示例",
+                params
+        );
+    }
 }

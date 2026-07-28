@@ -1,11 +1,11 @@
 package entity;
 
 
-import com.yonghui.common.constants.Constant;
-import lombok.Getter;
 
-import javax.com.yonghui.common.exception.BaseKnownException;
-import java.util.Arrays;
+import lombok.Getter;
+//import com.yonghui.common.constants.Constant;
+//import javax.com.yonghui.common.exception.BaseKnownException;
+//import java.util.Arrays;
 
 /**
  * @author ringo
@@ -64,8 +64,8 @@ public enum SymbolTypEnum {
         this.cast = cast;
     }
 
-    public static SymbolTypEnum getSymbolTypeByCode(int value) {
-        return Arrays.stream(SymbolTypEnum.values()).filter(e -> e.getCode()==value).findFirst()
-                .orElseThrow(() -> new BaseKnownException(Constant.ERRORCODE_INVALID_SYSTEM_PARAMETER, "没有查询到SymbolType类型"));
-    }
+//    public static SymbolTypEnum getSymbolTypeByCode(int value) {
+//        return Arrays.stream(SymbolTypEnum.values()).filter(e -> e.getCode()==value).findFirst()
+//                .orElseThrow(() -> new BaseKnownException(Constant.ERRORCODE_INVALID_SYSTEM_PARAMETER, "没有查询到SymbolType类型"));
+//    }
 }

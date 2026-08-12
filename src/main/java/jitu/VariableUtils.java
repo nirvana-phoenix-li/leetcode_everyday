@@ -52,8 +52,7 @@ public class VariableUtils {
 
     public static void main(String[] args) {
         String[] split = MetaData.split(";");
-        for (int i = 0; i < split.length - 1; i++) {
-            String string = split[i];
+        for (String string : split) {
             String[] innerSplit = string.split(",");
             String variableCode = innerSplit[1].split("\"")[1];
             String variableName = innerSplit[2].split("\"")[1];

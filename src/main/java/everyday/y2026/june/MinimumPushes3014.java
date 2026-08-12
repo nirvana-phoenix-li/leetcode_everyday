@@ -77,8 +77,6 @@ public class MinimumPushes3014 {
         MinimumPushes3014 main = new MinimumPushes3014();
         int i = main.minimumPushes("xycdefghij");
         System.out.println(i);
-
-
     }
 
     public int minimumPushes(String word) {

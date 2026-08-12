@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class variableUtils {
+public class VariableUtils {
 
     private static final String URL = "https://demo-riskshield-inner.yunlu-tech.cn/riskshield/variable/save";
     private static final String AUTH_TOKEN = "895cf292773e419eb977fdb9938cac7b";

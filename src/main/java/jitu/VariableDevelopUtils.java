@@ -11,8 +11,9 @@ import java.util.Map;
 
 public class VariableDevelopUtils {
 
-    private static final String DEVELOP_URL = "https://demo-riskshield-inner.yunlu-tech.cn/riskshield/variable/develop";
-    private static final String PAGE_URL = "https://demo-riskshield-inner.yunlu-tech.cn/riskshield/variable/develop/page";
+    private static final String DOMAIN_NAME = "https://demo-riskshield-inner.yunlu-tech.cn";
+    private static final String DEVELOP_URL = DOMAIN_NAME + "/riskshield/variable/develop";
+    private static final String PAGE_URL = DOMAIN_NAME + "/riskshield/variable/develop/page";
     private static final String AUTH_TOKEN = "895cf292773e419eb977fdb9938cac7b";
     private static final Boolean isDevelopFinish = true;
     public static String MetaData = "list.add(new RiskSourcePropResult(\"运单号\", \"waybillNo\", \"运单号\", VariableType.STRING.getCode(), paramObject.getString(\"waybillNo\")));\n" +
@@ -91,9 +92,9 @@ public class VariableDevelopUtils {
             developParams.put("id", id);
             developParams.put("variableUuid", variableUuid);
             developParams.put("variableExp", "return " + variableCode + ";");
-            if (isDevelopFinish){
+            if (isDevelopFinish) {
                 developParams.put("state", "DEVELOP_FINISH");
-            }else {
+            } else {
                 developParams.put("state", "DEVELOPING");
             }
             String developResult = developVariable(developParams);

@@ -1,15 +1,17 @@
 package jitu;
+
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class VariableUtils {
-
-    private static final String URL = "https://demo-riskshield-inner.yunlu-tech.cn/riskshield/variable/save";
+    private static final String DOMAIN_NAME = "https://demo-riskshield-inner.yunlu-tech.cn";
+    private static final String URL = DOMAIN_NAME + "/riskshield/variable/save";
     private static final String AUTH_TOKEN = "895cf292773e419eb977fdb9938cac7b";
-    public  static String MetaData="list.add(new RiskSourcePropResult(\"运单号\", \"waybillNo\", \"运单号\", VariableType.STRING.getCode(), paramObject.getString(\"waybillNo\")));\n" +
+    public static String MetaData = "list.add(new RiskSourcePropResult(\"运单号\", \"waybillNo\", \"运单号\", VariableType.STRING.getCode(), paramObject.getString(\"waybillNo\")));\n" +
             "list.add(new RiskSourcePropResult(\"派件时间\", \"dispatchTime\", \"派件时间\", VariableType.DATE.getCode(), paramObject.getDate(\"dispatchTime\")));\n" +
             "list.add(new RiskSourcePropResult(\"客户编码\", \"customerCode\", \"客户编码\", VariableType.STRING.getCode(), paramObject.getString(\"customerCode\")));\n" +
             "list.add(new RiskSourcePropResult(\"客户名称\", \"customerName\", \"客户名称\", VariableType.STRING.getCode(), paramObject.getString(\"customerName\")));\n" +
@@ -50,8 +52,8 @@ public class VariableUtils {
 
     public static void main(String[] args) {
         String[] split = MetaData.split(";");
-        for (int i = 0; i < split.length-1; i++) {
-            String string=split[i];
+        for (int i = 0; i < split.length - 1; i++) {
+            String string = split[i];
             String[] innerSplit = string.split(",");
             String variableCode = innerSplit[1].split("\"")[1];
             String variableName = innerSplit[2].split("\"")[1];

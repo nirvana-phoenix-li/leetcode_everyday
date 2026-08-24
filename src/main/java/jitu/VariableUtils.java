@@ -8,9 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VariableUtils {
-    private static final String DOMAIN_NAME = "https://demo-riskshield-inner.yunlu-tech.cn";
+//    private static final String DOMAIN_NAME = "https://demo-riskshield-inner.yunlu-tech.cn";
+private static final String DOMAIN_NAME = "https://riskshield-inner.yunlu-tech.cn";
     private static final String URL = DOMAIN_NAME + "/riskshield/variable/save";
-    private static final String AUTH_TOKEN = "895cf292773e419eb977fdb9938cac7b";
+    private static final String AUTH_TOKEN = "cf83ffe2dce649e3b0e7f12e3a8a6d6f";
     public static String MetaData = "list.add(new RiskSourcePropResult(\"运单号\", \"waybillNo\", \"运单号\", VariableType.STRING.getCode(), paramObject.getString(\"waybillNo\")));\n" +
             "list.add(new RiskSourcePropResult(\"派件时间\", \"dispatchTime\", \"派件时间\", VariableType.DATE.getCode(), paramObject.getDate(\"dispatchTime\")));\n" +
             "list.add(new RiskSourcePropResult(\"客户编码\", \"customerCode\", \"客户编码\", VariableType.STRING.getCode(), paramObject.getString(\"customerCode\")));\n" +
@@ -50,7 +51,7 @@ public class VariableUtils {
             "list.add(new RiskSourcePropResult(\"脱敏寄件人手机号\", \"senderPhoneMasked\", \"脱敏寄件人手机号\", VariableType.STRING.getCode(), paramObject.getString(\"senderPhoneMasked\")));\n" +
             "list.add(new RiskSourcePropResult(\"寄件时间\", \"deliveryTime\", \"寄件时间\", VariableType.DATE.getCode(), paramObject.getDate(\"deliveryTime\")));";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         String[] split = MetaData.split(";");
         for (String string : split) {
             String[] innerSplit = string.split(",");
@@ -65,6 +66,7 @@ public class VariableUtils {
             params.put("variableCategory", "PROPERTY");
             params.put("variableType", variableType);
             String result = saveVariable(params);
+            Thread.sleep(3000L);
             System.out.println(result);
         }
 

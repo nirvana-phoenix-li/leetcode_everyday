@@ -11,10 +11,14 @@ import java.util.Map;
 
 public class VariableDevelopUtils {
 
-    private static final String DOMAIN_NAME = "https://demo-riskshield-inner.yunlu-tech.cn";
+    //test environment
+//    private static final String DOMAIN_NAME = "https://demo-riskshield-inner.yunlu-tech.cn";
+    //product environment
+    private static final String DOMAIN_NAME = "https://riskshield-inner.yunlu-tech.cn";
     private static final String DEVELOP_URL = DOMAIN_NAME + "/riskshield/variable/develop";
     private static final String PAGE_URL = DOMAIN_NAME + "/riskshield/variable/develop/page";
-    private static final String AUTH_TOKEN = "895cf292773e419eb977fdb9938cac7b";
+    private static final String AUTH_TOKEN = "ee6598c09a784bd998623f6563df194c";
+
     private static final Boolean isDevelopFinish = true;
     public static String MetaData = "list.add(new RiskSourcePropResult(\"运单号\", \"waybillNo\", \"运单号\", VariableType.STRING.getCode(), paramObject.getString(\"waybillNo\")));\n" +
             "list.add(new RiskSourcePropResult(\"派件时间\", \"dispatchTime\", \"派件时间\", VariableType.DATE.getCode(), paramObject.getDate(\"dispatchTime\")));\n" +
@@ -56,12 +60,13 @@ public class VariableDevelopUtils {
             "list.add(new RiskSourcePropResult(\"寄件时间\", \"deliveryTime\", \"寄件时间\", VariableType.DATE.getCode(), paramObject.getDate(\"deliveryTime\")));";
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         String[] split = MetaData.split(";");
         for (String string : split) {
             String[] innerSplit = string.split(",");
             String variableCode = innerSplit[1].split("\"")[1];
             updateVarible(variableCode);
+//            Thread.sleep(3000L);
         }
     }
 

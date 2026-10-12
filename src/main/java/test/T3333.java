@@ -62,20 +62,20 @@ public class T3333 {
     }
 
     /**
-     * 发送富文本消息（Post 类型，单行 key-value）
-     * 自动把 JSONObject 拆成带 tag:text 的节点，并包成二维数组
+     * 发送富文本消息（Post 类型，key-value）
+     * 自动把 JSONObject 拆成带 tag:text 的节点，每个字段独占一行
      */
     public static boolean sendPost(String webhookUrl, String secret, String title, JSONObject jsonObject) {
-        JSONArray line = new JSONArray();
+        JSONArray content = new JSONArray();
         for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
             JSONObject node = new JSONObject();
             node.put("tag", "text");
-            node.put("text", entry.getKey() + "：" + entry.getValue() + "  ");
-            line.add(node);
-        }
+            node.put("text", entry.getKey() + "：" + entry.getValue());
 
-        JSONArray content = new JSONArray();
-        content.add(line);
+            JSONArray line = new JSONArray();
+            line.add(node);
+            content.add(line);
+        }
 
         JSONObject zhCn = new JSONObject();
         zhCn.put("title", title);
